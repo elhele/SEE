@@ -71,6 +71,7 @@ public class goStraight {
                 true);
                 lightSens1.setHigh(100);
                 lightSens2.setHigh(100);
+                Delay.msDelay(5000);
                 dp.setTravelSpeed(10);
                 dp.travel(-Math.PI*2*arcRad*angle/360);        
                 dp.stop();
@@ -81,7 +82,8 @@ public class goStraight {
 \end{lstlisting}
 \section{What and how we are planning to do.}
 We are planning to observe the motion model of Lego NXT robot with a differential drive. Based on these observations we will obtain a distribution of final poses and calculate motion parameters.\\
-We are planning to estimate the position of the robot based on two light points emitted by light sensors. The starting position, the "garage", will also be marked as two points on the paper. Three series of experiments (around 30 times each) will be conducted: forward motion, left arc motion, right arc motion. For the forward motion the program above will be used for the left and right motions the following programs will be used:
+The measuring system is following: the differential drive robot with two light sensors with narrow window for light emitting so it would emit only a point of light and a large sheet of paper with a coordinate system and two "garage" points which are determining the initial position of the robot - the light points must be on these points. On the paper sheet we can mark the robot's position using a pen that is not attached to the robot. To measure the coordinates of the robot's positions we are going to use a ruler and to store these results we are going to use a table in a LibreOffice Calc file.\\
+The measuring method is the following: we are planning to estimate the position of the robot based on positions of two points of light emitted by light sensors. The starting position, the "garage", will also be marked as two points on the paper. The measurement result will be obtained by conducting three series of experiments (around 30 times each): forward motion, left arc motion, right arc motion. After each of those experiments we measure the coordinates of the light points (measured value).  For the forward motion the program above will be used for the left and right motions the following programs will be used:
 
 \begin{lstlisting}
 package LegoNXT;
@@ -103,9 +105,9 @@ public class goLeft {
                 DifferentialPilot dp = new DifferentialPilot
                 (MoveController.WHEEL_SIZE_NXT1, 18, Motor.B, 
                 Motor.C, true);
-
                 lightSens1.setHigh(100);
                 lightSens2.setHigh(100);
+                Delay.msDelay(5000);
                 dp.setTravelSpeed(10);
                 dp.arc(-arcRad, angle);
                 dp.stop();
@@ -134,9 +136,9 @@ public class goRight {
                 DifferentialPilot dp = new DifferentialPilot
                 (MoveController.WHEEL_SIZE_NXT1, 18, Motor.B,
                  Motor.C, true);
-
                 lightSens1.setHigh(100);
-                lightSens2.setHigh(100);		
+                lightSens2.setHigh(100);
+                Delay.msDelay(5000);		
                 dp.setTravelSpeed(10);
                 dp.arc(arcRad, -angle);
                 dp.stop();
@@ -146,6 +148,14 @@ public class goRight {
 
 \end{lstlisting}
 \section{Which difficulties we expect.}
-First difficulty that we expect is an uneven work of the motors. NXT Lego robots usually have problems with a forward motions because of not very good synchronized motor work.
+\begin{itemize}
+\item First difficulty that we expect is slightly different wheel diameter and uneven work of the motors. NXT Lego robots usually have problems because of slightly unsynchronized motor work. In this case the forward motion will be not exactly straight and arcs will have slightly wrong parameters.
+\item Another possible difficulty in the measurement can be caused by incline of the surface, on which we put the sheet of paper, or the paper itself. In this case we could have the same problems as in previous case.
+\item Since robot is shaking while moving, light sensors can slightly change their positions. In this case on or the both points can be moved and we estimate the position of the robot incorrectly.
+\item Imperfection of the coordinate grid and a ruler that will cause a systematic error that we must take into account.
+\item Imperfection of a light point and a pen - both, the point, and a pen are not material points, so they have a certain diameter that will add a systematic error.
+\end{itemize}
+
+ 
 
 \end{document}
