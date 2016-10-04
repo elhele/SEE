@@ -13,10 +13,11 @@ public class goLeft {
 	public static void main(String[] args) {
 		double arcRad = 40;
 		double angle = 90;
+		double trackWidth = 12;
 		Button.LEFT.waitForPressAndRelease();
 		LightSensor lightSens1 = new LightSensor(SensorPort.S1);
 		LightSensor lightSens2 = new LightSensor(SensorPort.S2);
-		DifferentialPilot dp = new DifferentialPilot(MoveController.WHEEL_SIZE_NXT1, 18, Motor.B, Motor.C, true);
+		DifferentialPilot dp = new DifferentialPilot(MoveController.WHEEL_SIZE_NXT1, trackWidth, Motor.B, Motor.C, true);
 		lightSens1.setHigh(100);
 		lightSens2.setHigh(100);
 		Button.RIGHT.waitForPressAndRelease();
@@ -25,4 +26,5 @@ public class goLeft {
 		dp.stop();
 		Button.ESCAPE.waitForPressAndRelease();
 	}
+
 }
