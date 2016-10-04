@@ -9,6 +9,7 @@
 \usepackage{listings}
 \setlength{\heavyrulewidth}{1.5pt}
 \setlength{\abovetopsep}{4pt}
+\setlength{\parindent}{0pt}
 \graphicspath{{.}}
 
 \usepackage[margin=1in]{geometry}
@@ -37,16 +38,20 @@
 \section{Construct the “simple robot” shown on the instruction sheet included in the LEGO construction
 kit.}
 
-We have assembled the robot in accordance to the instruction that is shown in Fig 1:
-//TODO: take a photo of the assembled robot and attach here
+We have assembled the robot in accordance to the instruction that is shown in Fig \ref{fig:robot}:
+\begin{figure}[h]
+  \centering
+  \caption{Assembled Lego NXT robot with two light sensors. Front and side views.\label{fig:robot}}
+  \includegraphics[width=0.8\textwidth]{LegoNXT}
+\end{figure}
 
 \section{Equip your robot with a pen, such that you can mark the position of the robot at its stop
 position.}
-As it is shown in Fig.1, the robot is equipped with two light sensors that substitute laser pointers. NXT light sensors emit bright red light. We have narrowed the light spot and obtained 2 small accurate red dots that mark the position of the robot with a sufficient precision. After the robot stops, pen or pencil is used to mark position by hand. The advantage of this method is that the robot won't be moved in the moment of position measurement, as it can easily be moved when a pen touches the surface. Additionally, the robot has smaller construction: lights don't vibrate as long 'hand' with two pencils. 
+As it is shown in Fig.\ref{fig:robot}, the robot is equipped with two light sensors that substitute laser pointers. NXT light sensors emit bright red light. We have narrowed the light spot and obtained 2 small accurate red dots that mark the position of the robot with a sufficient precision. After the robot stops, pen or pencil is used to mark position by hand. The advantage of this method is that the robot won't be moved in the moment of position measurement, as it can easily be moved when a pen touches the surface. Additionally, the robot has smaller construction: lights don't vibrate as long 'hand' with two pencils. 
 
 \section{Verify your robot is running LeJOS and program it to run for a certain
 distance.}
-We have installed and tested LeJOS. The test was performed with the following program for forward motion.
+We have installed and tested LeJOS. The test was performed with the following program for forward motion:
 
 \begin{lstlisting}
 
@@ -84,10 +89,14 @@ public class goStraight {
 We are planning to observe the motion model of Lego NXT robot with a differential drive. Based on these observations we will obtain a distribution of final poses and calculate motion parameters.\\
 The measuring system is following: the differential drive robot with two light sensors with narrow window for light emitting so it would emit only a point of light and a large sheet of paper with a coordinate system and two "garage" points which are determining the initial position of the robot - the light points must be on these points. On the paper sheet we can mark the robot's position using a pen that is not attached to the robot. To measure the coordinates of the robot's positions we are going to use a ruler and to store these results we are going to use a table in a LibreOffice Calc file.\\
 The measuring method is the following: we are planning to estimate the position of the robot based on positions of two points of light emitted by light sensors. The starting position, the "garage", will also be marked as two points on the paper. 
-Base coordinate frame is located as shown in the picture below:
-\begin{center}
-\includegraphics[scale =1]{frame.png}
-\end{center}
+Base coordinate frame is located as shown in Fig.\ref{fig:frame}:
+
+\begin{figure}[h]
+  \centering
+  \caption{Base coordinate frame.\label{fig:frame}}
+  \includegraphics[width=0.4\textwidth]{frame}
+\end{figure}
+
 Initial position $X_0 = (0,0)$, heading angle $\phi = 0$. After measuring final coordinates of 2 red dots $P_1 = (x_1,y_1)$ and $P_2=(x_2,y_2)$, the robot's coordinates will be calculated:
 
 \begin{equation}
@@ -101,7 +110,7 @@ Heading angle of the robot will be calculated as angle between normal vector $(1
 \end{equation}
 
 
- The measurement result will be obtained by conducting three series of experiments (around 30 times each): forward motion, left arc motion, right arc motion. After each of those experiments we measure the coordinates of the light points (measured value).  For the forward motion the program above will be used for the left and right motions the following programs will be used:
+The measurement result will be obtained by conducting three series of experiments (around 30 times each): forward motion, left arc motion, right arc motion. After each of those experiments we measure the coordinates of the light points (measured value).  For the forward motion the program above will be used for the left and right motions the following programs will be used:
 
 \begin{lstlisting}
 package LegoNXT;
