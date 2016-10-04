@@ -26,5 +26,4 @@ public class goLeft {
 		dp.stop();
 		Button.ESCAPE.waitForPressAndRelease();
 	}
-
 }
