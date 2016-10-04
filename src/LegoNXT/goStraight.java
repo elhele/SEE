@@ -18,6 +18,7 @@ public class goStraight {
 
                 lightSens1.setHigh(100);
                 lightSens2.setHigh(100);
+                Delay.msDelay(5000);
                 dp.setTravelSpeed(10);
                 dp.travel(-Math.PI*2*arcRad*angle/360);        
                 dp.stop();
