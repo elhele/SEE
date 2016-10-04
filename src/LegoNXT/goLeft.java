@@ -1,4 +1,4 @@
-package ljTest;
+package LegoNXT;
 
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
