@@ -13,6 +13,7 @@ public class goStraight {
 	public static void main(String[] args) {
 		double arcRad = 40;
 		double angle = 90;
+		double arcLen = Math.PI*2*arcRad*angle/360;
 		double trackWidth = 12;
 		Button.LEFT.waitForPressAndRelease();
 		LightSensor lightSens1 = new LightSensor(SensorPort.S1);
@@ -22,9 +23,8 @@ public class goStraight {
 		lightSens2.setHigh(100);
 		Button.RIGHT.waitForPressAndRelease();
 		dp.setTravelSpeed(10);
-		dp.travel(-Math.PI*2*arcRad*angle/360);        
+		dp.travel(-arcLen);        
 		dp.stop();
 		Button.ESCAPE.waitForPressAndRelease();
 	}
-
 }

@@ -11,7 +11,7 @@ import lejos.nxt.Button;
 public class goLeft {
 
 	public static void main(String[] args) {
-		double arcRad = 40;
+		double arcRad = 25;
 		double angle = 90;
 		double trackWidth = 12;
 		Button.LEFT.waitForPressAndRelease();
@@ -26,5 +26,4 @@ public class goLeft {
 		dp.stop();
 		Button.ESCAPE.waitForPressAndRelease();
 	}
-
 }
