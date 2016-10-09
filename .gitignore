@@ -1,1 +1,5 @@
-/bin/
+*.aux
+*.log
+*.pdf
+*.gz
+*.out
