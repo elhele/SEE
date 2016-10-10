@@ -8,6 +8,7 @@
 \usepackage{amssymb}
 
 
+
 \usepackage{listings}
 \setlength{\heavyrulewidth}{1.5pt}
 \setlength{\abovetopsep}{4pt}
@@ -226,7 +227,7 @@ For the experiment we used a setup described in section "4 What and how we are p
 
 \section{Experimental data processing}
 
-We have obtained 105 pairs of points (see attachment Data.txt). The overall distribution of robot's positions is shown in Fig.\ref{fig:pos} and the overall distribution of robot's heading directions is shown in Fig.\ref{fig:direct}. In Fig. \ref{pics:forward} - \ref{pics:sright} one can see a zoomed distributions of robot's positions and diagrams for distributions of robot's heading directions for all the movement cases. 
+We have obtained 105 pairs of points (see attachment Data.txt). The overall distribution of robot's positions is shown in Fig.\ref{fig:pos} and the overall distribution of robot's heading directions is shown in Fig.\ref{fig:direct}. In Fig. \ref{pics:forward} - \ref{pics:sright} one can see a zoomed distributions of robot's positions and diagrams for distributions of robot's heading directions for all the movement cases.
 
 \begin{figure}[H]
   \centering
@@ -435,14 +436,13 @@ title('Distribution of robots heading directions after right movement')
 legend('Robot heading angle in degrees')
 \end{lstlisting}
 
-After experimental data was obtained, it should be processed to extract robot position and orientation. 
 
-\begin{figure}[h]
-  \centering
-  \caption{Base coordinate frame.\label{fig:frame}}
-  \includegraphics[width=0.4\textwidth]{frame}
-\end{figure}
 
+\newpage
+After experimental data was obtained, it should be processed to extract robot position and orientation.
+\begin{center}
+\includegraphics[width=0.5\textwidth]{frame}
+\end{center}
 Heading angle of the robot will be calculated as angle between normal vector $(1,0)$ and normal vector to line that goes through points $P_1,P_2.$ It can be calculated using this formulas:
 
 \begin{equation}
@@ -462,23 +462,19 @@ X = (\frac{x_1+x_2}{2}-d \cos(\phi),\frac{y_1+y_2}{2}+d \sin(\phi)),
 \end{equation}
 where $d$ is distance between robot center and point between 2 red dots.
 
-\begin{figure}[h]
-  \centering
-  \caption{Robot pose calculation\label{fig:frame}}
-  \includegraphics[width=0.4\textwidth]{pose}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{pose}
+\end{center}
 \newpage
 
 
-After 5 tests, distribution of all poses looks like 5 dense clouds. 
+After 5 tests, distribution of all poses looks like 5 dense clouds.
 
 
-\begin{figure}[h]
-  \centering
-  \caption{5 clouds of poses.\label{fig:clouds}}
+\begin{center}
   \includegraphics[width=0.6\textwidth]{all}
   \includegraphics[width=0.6\textwidth]{allphi}
-\end{figure}
+\end{center}
 
 Now, let's look over each test results.
 
@@ -486,60 +482,59 @@ Now, let's look over each test results.
 \subsection{Forward movement}
 During the forward experiment, the robot was biased to the right. Distribution of positions can be seen on a next figure. Heading direction distribution was shown as a histogram.
 
-\begin{figure}[h]
-  \centering
-  \caption{Robot positions and heading angle distribution for forward movement test\label{fig:clouds}}
+\begin{center}
   \includegraphics[width=0.6\textwidth]{s}
   \includegraphics[width=0.6\textwidth]{sphi}
-\end{figure}
+\end{center}
 
 It can be seen that precision of the reading can be determined by density of the plots and hence by using variance. $var_x = 2.9,var_y = 68.6$. The difference is so big, because the wheels were given the same command.
 \newpage
+
 \subsection{Slight left movement}
 
 
-\begin{figure}[h]
-  \centering
-  \caption{Robot positions and heading angle distribution for slight left movement test\label{fig:l}}
+\begin{center}
   \includegraphics[width=0.6\textwidth]{l}
   \includegraphics[width=0.6\textwidth]{lphi}
-\end{figure}
+\end{center}
 
 It can be seen that precision of the reading can be determined by density of the plots and hence by using variance. $var_x = 51.6,var_y = 12.9$
+
+
+
 \newpage
+
 \subsection{Slight right movement}
 
 
-\begin{figure}[h]
-  \centering
-  \caption{Robot positions and heading angle distribution for slight right movement test\label{fig:r}}
+\begin{center}
   \includegraphics[width=0.6\textwidth]{r}
   \includegraphics[width=0.6\textwidth]{rphi}
-\end{figure}
+\end{center}
 
 It can be seen that precision of the reading can be determined by density of the plots and hence by using variance. $var_x = 109,var_y = 122.6$ The variance is so big, because one reading look line an experimental error.
+
+
+
 \newpage
+
 \subsection{Left movement}
 
 
-\begin{figure}[h]
-  \centering
-  \caption{Robot positions and heading angle distribution for left movement test\label{fig:LL}}
+\begin{center}
   \includegraphics[width=0.6\textwidth]{LL}
   \includegraphics[width=0.6\textwidth]{LLphi}
-\end{figure}
+\end{center}
 
 It can be seen that precision of the reading can be determined by density of the plots and hence by using variance. $var_x = 9.8,var_y = 12.6$.
 \newpage
 \subsection{Right movement}
 
 
-\begin{figure}[h]
-  \centering
-  \caption{Robot positions and heading angle distribution for right movement test\label{fig:RR}}
+\begin{center}
   \includegraphics[width=0.6\textwidth]{RR}
   \includegraphics[width=0.6\textwidth]{RRphi}
-\end{figure}
+\end{center}
 
 It can be seen that precision of the reading can be determined by density of the plots and hence by using variance. $var_x = 50.2,var_y = 15.5$.
 
