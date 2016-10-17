@@ -182,8 +182,15 @@ Here skew and tangential distortion are zero because of the chosen model. The  i
 \[ \left( \begin{array}{ccc}
 f_x & s & x_0 \\
 0 & f_y & y_0 \\
-0 & 0 & 1 \end{array} \right)\],
-where each parameter is a geometrical parameter of the camera. $f_x, f_y$ are focal lengths those for a perfectly spherical camera are equal (Fig. \ref{fig:focal}). In our case they are slightly different. It could be caused by imperfectance of the camera, non-uniformed scaling of the pictures or calibrations errors. However, difference is small enough to use this calibration in further work.
+0 & 0 & 1 \end{array} \right)\],	
+where each parameter is a geometrical parameter of the camera. In our case the matrix looks in the following way:
+
+
+\[ \left( \begin{array}{ccc}
+1.4510e+03 & 0 & 968.9125 \\
+0 & 1.4511e+03 & 552.0061 \\
+0 & 0 & 1 \end{array} \right)\]
+$f_x, f_y$ are focal lengths those for a perfectly spherical camera are equal (Fig. \ref{fig:focal}). In our case they are slightly different. It could be caused by imperfectance of the camera, non-uniformed scaling of the pictures or calibrations errors. However, difference is small enough to use this calibration in further work.
 
 
 
@@ -197,18 +204,27 @@ $x_0, y_0$ is principal point offset that shows the coordinates of the printipal
 
 \begin{figure}[h]
   \centering
-  \caption{Principal axis and principal poin. ~\cite{2}.\label{fig:principal}}
+  \caption{Principal axis and principal poin ~\cite{2}.\label{fig:principal}}
   \includegraphics[width=0.5\textwidth]{principal}
 \end{figure}
 
-Radial distortion is small that shows that the calibration was quite successful and mean reprojection error confirms it, because it is less than 0.5 pixels.
+Radial distortion is small that shows that the calibration was quite successful. What is the radial distortion is shown in Fig. \ref{fig:distortion} and a distorted version of one of our photos - in \ref{fig:distort}. Mean reprojection error ("image distance between a projected point and a measured one" ~\cite{4}) confirms that the calibration was successful, because it is less than 0.5 pixels.
+
+\begin{figure}[h]
+  \centering
+  \caption{Distortion ~\cite{3}.\label{fig:distortion}}
+  \includegraphics[width=0.5\textwidth]{distortion}
+\end{figure}
 
 \begin{thebibliography}{3}
 \bibitem{1}
 Zhang, Z. 2000. A flexible new technique for camera calibration. IEEE TPAMI, 22(11):1330–1334.
 \bibitem{2}
 \url{http://ksimek.github.io/2013/08/13/intrinsic/}
-
+\bibitem{3}
+\url{http://www.uni-koeln.de/~al001/radcor_files/hs100.htm}
+\bibitem{4}
+\url{https://en.wikipedia.org/wiki/Reprojection_error}
 \end{thebibliography}
 
 
