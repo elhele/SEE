@@ -13,5 +13,5 @@
 % fitGaussian(position_left, ' Left');
 % fitGaussian(phi_left, ' Left');
 % 
-% fitGaussian(position_right, ' Right');
-% fitGaussian(phi_right, ' Right');
+fitGaussian(position_right, ' Right');
+fitGaussian(phi_right, ' Right');
