@@ -27,13 +27,16 @@ yc = yc - d*sin(phi);
 position_straight = [xc(1:40) yc(1:40)];
 position_slight_left = [xc(41:80) yc(41:80)];
 position_slight_left = position_slight_left([1,3:31,34:end],:);
+position_slight_left = [position_slight_left; position_slight_left(27,:); position_slight_left(30,:); position_slight_left(35,:)];
 
 position_slight_right = [xc(81:120) yc(81:120)];
 position_slight_right = position_slight_right(2:end,:);
 position_slight_right = position_slight_right([1:3,5:7,9:end],:);
+position_slight_right = [position_slight_right; position_slight_right(14,:); position_slight_right(30,:); position_slight_right(20,:)];
 
 position_left = [xc(121:161) yc(121:161)];
 position_left = position_left([1:23,27:end],:);
+position_left =[position_left; position_left(15,:); position_left(13,:)];
 
 position_right = [xc(162:end) yc(162:end)];
 position_right = position_right([2:35,37:end],:);
@@ -43,13 +46,17 @@ phi_straight = phi(1:40);
 
 phi_slight_left = phi(41:80);
 phi_slight_left = phi_slight_left([1,3:31,34:end],:);
+phi_slight_left = [phi_slight_left; phi_slight_left(27); phi_slight_left(30); phi_slight_left(35)];
 
 phi_slight_right = phi(81:120);
 phi_slight_right = phi_slight_right(2:end,:);
 phi_slight_right = phi_slight_right([1:3,5:7,9:end]);
+phi_slight_right = [phi_slight_right; phi_slight_right(14); phi_slight_right(30); phi_slight_right(20)];
 
 phi_left = phi(121:161);
 phi_left = phi_left([1:23,27:end]);
+phi_left = [phi_left; phi_left(15); phi_left(13)];
+
 
 phi_right = phi(162:end);
 phi_right = phi_right([2:35,37:end]);
