@@ -1,12 +1,20 @@
 function pcaCalculation(data, direction)
-
+    [~,dim] = size(position_left);
+    
+    if dim==1
+        
+        
+        
+    end
+    
+    if dim ==2
     [coeffs, projected_coords, latent] = pca(data);
-    chiSquareTestGaussian(projected_coords(:,1),0.1)
-    chiSquareTestGaussian(projected_coords(:,2),0.2)
+    chiSquareTestGaussian(projected_coords(:,1),0.1,strcat(' projection of 1st principal component during ',direction,' movement' ))
+    chiSquareTestGaussian(projected_coords(:,2),0.1,strcat(' projection of 2st principal component during ',direction,' movement'))
 
     figure(1);
     subplot(1, 2, 1);
-    plot(projected_coords(:,1), projected_coords(:,2),'+');
+    plot(projected_coords(:,2), projected_coords(:,1),'+');
     grid on
     axis equal
     xlabel('1st Principal Component');
@@ -32,5 +40,9 @@ function pcaCalculation(data, direction)
     xlabel('Projected coordinates');
     ylabel('Frequency');
     title(strcat('2nd Principal Comp. Histogram for Going ', direction));
-
+        
+        
+    end
+    
+   
 end
