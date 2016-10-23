@@ -81,12 +81,12 @@ If we want to estimate accuracy of robot command execution, we need to know the 
 
 All commands were arc movements with different angles and radiuses.
 
-\subsubsection{Straight movement}.
+\subsubsection{Straight movement}
 $$
 \begin{array}{l}
 x_d = 628 +d = 628-70 = 558 ~~mm, \\
 y_d = 0 ~~mm, \\
-\phi_d = 0 deg,
+\phi_d = 0 ~~deg,
 \end{array}
 $$
 where $x_d,y_d,\phi_d$ are desired pose. $d$ is initial position of robot center in world coordinate system.
@@ -104,10 +104,10 @@ $$
 \begin{array}{l}
 x_d = R \sin \phi + d = 1200*0.5-70 = 530 ~~mm, \\
 y_d = R-R \cos \phi = 1200-1200*cos(30) = 160 ~~mm, \\
-\phi_d = \phi =30 deg,
+\phi_d = \phi =30 ~~deg.
 \end{array}
 $$
-where $x_d,y_d,\phi_d$ are desired pose. $d$ is initial position of robot center in world coordinate system.
+
 
 \subsubsection{Slight right movement}.
 
@@ -119,7 +119,7 @@ $$
 \begin{array}{l}
 x_d = R \sin \phi + d = 1200*0.5-70 = 530 ~~mm, \\
 y_d = -R+R \cos \phi = -1200+1200*cos(30) = -160 ~~mm, \\
-\phi_d = -\phi = -30 deg,
+\phi_d = -\phi = -30 ~~deg.
 \end{array}
 $$
 
@@ -133,7 +133,7 @@ $$
 \begin{array}{l}
 x_d = R + d = 250-70 = 180 ~~mm, \\
 y_d = R = 250 ~~mm, \\
-\phi_d = \phi = 90 deg,
+\phi_d = \phi = 90~~ deg.
 \end{array}
 $$
 
@@ -147,7 +147,7 @@ $$
 \begin{array}{l}
 x_d = R + d = 250-70 = 180 ~~mm, \\
 y_d = -R = -250 ~~mm, \\
-\phi_d = -\phi = -90 deg,
+\phi_d = -\phi = -90~~ deg.
 \end{array}
 $$
 
