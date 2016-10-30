@@ -20,16 +20,16 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{SEE Assignment 1}
+\rhead{SEE Assignment 4}
 \lhead{P.Lukin, E. Ovchinnikova}
 \cfoot{\thepage}
 
 \setlength{\droptitle}{-5em}
 
 \title{Scientific Experimentation and Evaluation  \\
-				Assignment: 2.1}
+				Assignment: 4}
 \author{Petr Lukin, Evgeniya Ovchinnikova}
-\date{Lecture date: $17^{th}$ October 2016}
+\date{Lecture date: $24^{th}$ October 2016}
 
 \begin{document}
 %-------------------------------------------------------------------------------
@@ -56,383 +56,258 @@
 \maketitle
 
 \section{Experiment setup}
-In order to verify hypothesis that spread out of the stop positions is governed by Gaussian distribution we need to obtain more data. So, experimental data sets were enlarged o contain 20 more measurements. Additionally, the coordinate system were changed to right handed for convenience. Thus positive angular increment is counter-clockwise. Ultimately, the formula for pose calculation was also updated.
 
-\begin{equation}
-\phi = -\arccos(\frac{y_2-y_1}{\sqrt{(y_2-y_1)^2+(x_1-x_2)^2}}),
-\end{equation}
-
-if robot goes left. And with next one if the robot goes right. This is because $\arccos$ has range $[0, pi]$.
-
-\begin{equation}
-\phi = \pi-\arccos(\frac{y_2-y_1}{\sqrt{(y_2-y_1)^2+(x_1-x_2)^2}}).
-\end{equation}
-
-New formula for robot coordinates:
-
-\begin{equation}
-X = (\frac{x_1+x_2}{2}-d \cos(\phi),\frac{y_1+y_2}{2}-d \sin(\phi)),
-\end{equation}
-where $d$ is distance between robot center and point between 2 red dots.
-
-If we want to estimate accuracy of robot command execution, we need to know the ground truth. The ground truth can be obtained from the command that were given to the robot.
-
-\medskip
-
-All commands were arc movements with different angles and radiuses.
-
-\subsubsection{Straight movement}
-$$
-\begin{array}{l}
-x_d = 628 +d = 628-70 = 558 ~~mm, \\
-y_d = 0 ~~mm, \\
-\phi_d = 0 ~~deg,
-\end{array}
-$$
-where $x_d,y_d,\phi_d$ are desired pose. $d$ is initial position of robot center in world coordinate system.
-
-\subsubsection{Slight left movement}.
-
-The command was to make ark with $R = 1200$ mm, with angle $\phi = 30$ deg.
-
-\medskip
-
-The desired position can be recalculated in a chosen coordinate system as
-
-
-$$
-\begin{array}{l}
-x_d = R \sin \phi + d = 1200*0.5-70 = 530 ~~mm, \\
-y_d = R-R \cos \phi = 1200-1200*cos(30) = 160 ~~mm, \\
-\phi_d = \phi =30 ~~deg.
-\end{array}
-$$
-
-
-\subsubsection{Slight right movement}.
-
-The command was to make ark with $R = 1200$ mm, with angle $\phi = 30$ deg.
-
-\medskip
-
-$$
-\begin{array}{l}
-x_d = R \sin \phi + d = 1200*0.5-70 = 530 ~~mm, \\
-y_d = -R+R \cos \phi = -1200+1200*cos(30) = -160 ~~mm, \\
-\phi_d = -\phi = -30 ~~deg.
-\end{array}
-$$
-
-\subsubsection{Left movement}.
-
-The command was to make ark with $R = 250$ mm, with angle $\phi = 90$ deg.
-
-\medskip
-
-$$
-\begin{array}{l}
-x_d = R + d = 250-70 = 180 ~~mm, \\
-y_d = R = 250 ~~mm, \\
-\phi_d = \phi = 90~~ deg.
-\end{array}
-$$
-
-\subsubsection{Right movement}.
-
-The command was to make ark with $R = 250$ mm, with angle $\phi = 90$ deg.
-
-\medskip
-
-$$
-\begin{array}{l}
-x_d = R + d = 250-70 = 180 ~~mm, \\
-y_d = -R = -250 ~~mm, \\
-\phi_d = -\phi = -90~~ deg.
-\end{array}
-$$
-
-
-\section{Data preprocessing}
-Raw data were divided into 5 experimental sets that can be processed separately. Additionally, a few outliers were removed manually. The criterion was $dist(point,mean)>3 s$, where $s$ is sample variance. Because o elimination of a few datapoints, some points that close to the mean value were added to the each dataset.
-
-\medskip
-
-Matlab code of data preprocessing.
-
-\lstinputlisting{Data_processing.m}
-
-\newpage
-
-\section{PCA}
-To fit Gaussian distribution in data we need to verify the hypothesis that spread out of the stop positions is governed by Gaussian distribution. This can be done by Pearson chi square test. But this test is much more easier in one dimensional case than in 2-D. That is why we fit robot position into 2 one dimensional Gaussians. If we want to obtain one dimensional gaussian distribution, we need to project datapoints to principal coordinates of a gaussian. This can be done with principal component analysis.
-
-\medskip
-
-The following figures shows data distribution in principal coordinate system and principal vectors in world coordinate system for all 5 experiments.
-
-
-\subsubsection{Straight movement}
-
-\begin{center}
-  \includegraphics[scale=0.8]{s1}
-\end{center}
-
-
-
-\subsubsection{Slight left movement}
-
-\begin{center}
-  \includegraphics[scale=0.8]{l1}
-\end{center}
-
-
-\subsubsection{Slight right movement}
-
-\begin{center}
-  \includegraphics[scale=0.8]{r1}
-\end{center}
-
-
-\subsubsection{Left movement}
-
-\begin{center}
-  \includegraphics[scale=0.8]{ll1}
-\end{center}
-
-
-\subsubsection{Right movement}
-
-\begin{center}
-  \includegraphics[scale=0.8]{rr1}
-\end{center}
-
-\newpage
-
-Matlab code of PCA function:
-
-\lstinputlisting{fitGaussian.m}
-
-
-
-\section{Chi square test}
-After projecting the data on principal coordinate vectors, chi square test can be performed. In my implementation, confidence level can be chosen. Test checks if data fits Gaussian distribution with $\mu = \mu_{empirical}$ and $\sigma = \sigma_{empirical}$.
-
-The following figures shows histograms of data projections on principal vectors and angular deviation from mean value. Additionally it shows results of a Pearson chi-square test.
-
-\newpage
-
-\subsubsection{Straight movement}
-
-\begin{center}
-  \includegraphics[scale=0.6]{s2}
-  
-  
-  \includegraphics[scale=0.6]{s3}
-\end{center}
-
-Data: projection of 1st principal component during  Straight movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 8.9302 with confidence 0.9%.
-
-
-\smallskip
-
-Data:  projection of 2st principal component during  Straight movement, can not be proven to have Gaussian Distribution with confidence 0.9%.
-
-
-\smallskip
-
-
-Data: angular error during   Straight movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 0.82481 with confidence 0.9%.
-
-\begin{table}[!h]
-\centering
-\caption{Experimental results: straight movement}
-\begin{tabular}{lllll}
-     & Desired & Mean value & Accuracy & Precision \\
-x    &  558  mm     &    545  mm      &    13  mm    &     9  mm    \\
-y    &  0  mm     &     -8  mm     &  8    mm    &    -       \\
-$\phi$ &  0   deg    &     -2.3    deg   &     2.3 deg     & 0.8 deg
-\end{tabular}
-\end{table}
-
-
-\newpage
-\subsubsection{Slight left movement}
-
-\begin{center}
-  \includegraphics[scale=0.6]{l2}
-  
-  
-  \includegraphics[scale=0.6]{l3}
-\end{center}
-
-
-Data: projection of 1st principal component during  Slight Left movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 12.7958 with confidence 0.9%.
-
-
-
-\smallskip
-
-Data: projection of 2st principal component during  Slight Left movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 1.7139 with confidence 0.9%.
-
-
-
-\smallskip
-
-
-Data:  angular error during   Slight Left movement, can not be proven to have Gaussian Distribution with confidence 0.9%.
-
-\begin{table}[!h]
-\centering
-\caption{Experimental results: slight left movement}
-\begin{tabular}{lllll}
-     & Desired & Mean value & Accuracy & Precision \\
-x    &  530  mm     &    514  mm      &    16  mm    &     13  mm    \\
-y    &  160 mm     &     160  mm     &  0    mm    &    2   mm    \\
-$\phi$ &  30   deg    &     30    deg   &     0 deg     & - deg
-\end{tabular}
-\end{table}
-
-\newpage
-\subsubsection{Slight right movement}
-
-\begin{center}
-
-  \includegraphics[scale=0.6]{r2}
-  
-  
-  \includegraphics[scale=0.6]{r3}
-\end{center}
-
-
-Data: projection of 1st principal component during  Slight Right movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 8.8624 with confidence 0.9%.
-
-
-
-
-\smallskip
-
-Data: projection of 2st principal component during  Slight Right movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 1.2828 with confidence 0.9%.
-
-
-
-
-\smallskip
-
-
-Data: angular error during   Slight Right movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 1.7816 with confidence 0.9%.
-
-\begin{table}[!h]
-\centering
-\caption{Experimental results: slight right movement}
-\begin{tabular}{lllll}
-     & Desired & Mean value & Accuracy & Precision \\
-x    &  530  mm     &    509  mm      &    21  mm    &     9  mm    \\
-y    &  -160 mm     &     -177  mm     &  17    mm    &    1 mm      \\
-$\phi$ &  -30   deg    &     -34    deg   &     4 deg     & 2 deg
-\end{tabular}
-\end{table}
-
-\newpage
-\subsubsection{Left movement}
-
-\begin{center}
-  \includegraphics[scale=0.6]{ll2}
-  
-  
-  \includegraphics[scale=0.6]{ll3}
-\end{center}
-
-
-Data: projection of 1st principal component during  Left movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 6.382 with confidence 0.9%.
-
-
-
-
-
-\smallskip
-
-Data: projection of 2st principal component during  Left movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 1.0773 with confidence 0.9%.
-
-
-
-
-
-\smallskip
-
-
-Data: angular error during   Left movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 1.2094 with confidence 0.9%.
-
-\begin{table}[!h]
-\centering
-\caption{Experimental results: left movement}
-\begin{tabular}{lllll}
-     & Desired & Mean value & Accuracy & Precision \\
-x    &  180  mm     &    144  mm      &    36  mm    &     6  mm    \\
-y    &  250 mm     &    245  mm     &  5    mm    &    1   mm    \\
-$\phi$ &  90   deg    &     85    deg   &     5 deg     & 1 deg
-\end{tabular}
-\end{table}
-
-\newpage
-\subsubsection{Right movement}
-
-\begin{center}
-  \includegraphics[scale=0.6]{rr2}
-  
-  
-  \includegraphics[scale=0.6]{rr3}
-\end{center}
-
-
-Data: projection of 1st principal component during  Right movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 6.0358 with confidence 0.9%.
-
-
-
-
-
-
-\smallskip
-
-Data: projection of 2st principal component during  Right movement, is Gaussian distributed with: mean = 0 and standard deviation sigma = 1.0768 with confidence 0.9%.
-
-
-
-
-
-
-\smallskip
-
-
-Data:  angular error during   Right movement, can not be proven to have Gaussian Distribution with confidence 0.9%.
-
-\begin{table}[!h]
-\centering
-\caption{Experimental results: right movement}
-\begin{tabular}{lllll}
-     & Desired & Mean value & Accuracy & Precision \\
-x    &  180  mm     &    137  mm      &    43  mm    &     6  mm    \\
-y    &  -250 mm     &    -254  mm     &  4    mm    &    1   mm    \\
-$\phi$ &  -90   deg    &     -81    deg   &     9 deg     & - deg
-\end{tabular}
-\end{table}
-
-\newpage
-
-\subsubsection{Matlab code of chi square test function:}
-
-\lstinputlisting{chiSquareTestGaussian.m}
-
-\section{Results/ conclusion}
-
+The current experiment was conducted using AICISS optical tracking system - three USB-cameras (lifecam19,20,22) mounted on the ceiling in a room C022. The cameras are pre-calibrated, so we didn't need to perform a calibration by ourselves as we did in the previous assignment. For this system usage we needed to install a marker that would be tracked by the system on the robot. We have generated some new markers (Fig. \ref{fig:markers}) and added them and their linear size (10 $\times$ 10 cm) to the dictionary: 
+
+\begin{lstlisting}
+
+dictionary.yml:
+
+%YAML:1.0
+nmarkers: 5
+markersize: 4
+marker_0: "0111000111100101"
+marker_1: "1100011000010101"
+marker_2: "0110101010001001"
+marker_3: "0011001000011111"
+marker_4: "0101010000111100"
+
+see_robot.json
+
+{
+    "Markers":
+    {
+        "15402":
+        [
+            "70.0 -70.0",
+            "70.0 70.0",
+            "-70.0 70.0",
+            "-70.0 -70.0"
+        ]
+    },
+    "Dimensions":
+    {
+        "Length": "100",
+        "Width": "100"
+    }
+}
+
+\end{lstlisting}
+
+\begin{figure}[h]
+  \centering
+  \caption{Two of newly generated markers.\label{fig:markers}}
+  \includegraphics[width=0.5\textwidth]{markers}
+\end{figure}
+
+It is important for the measurement that the marker is well fixed, doesn't shake and is parallel to the floor, so we've made the construction depicted in Fig. \ref{fig:markerHolder} to fix the marker on it.
+
+\begin{figure}[h]
+  \centering
+  \caption{A marker holding construction.\label{fig:markerHolder}}
+  \includegraphics[width=0.5\textwidth]{markerHolder}
+\end{figure}
+
+One can see that the platform is wide enough for the marker, so it won't bend and the crossbar in the middle makes it not shaky. It was also placed in such a way so it will be as close as possible with the details we have to the robot's center of the mass so it won't outbalance it. Another important point is that the the markers must have a white frame around it, otherwise it will be detected inaccurately. First time we've tried to conduct an experiment using a wrong marker (Fig. \ref{fig:wrongMarker}) and the results were inacceptable -- in some positions cameras just have lost the robot. Therefore, we have changed the setup to leave some white field and used a smaller size, so it would be easier to mount it so it would be fatter, that one can see in Fig. \ref{fig:rightMarker}. In this case cameras didn't loose the robot in any position in the driving part of the room.
+
+\begin{figure}[h]
+  \centering
+  \caption{A wrong marker mount.\label{fig:wrongMarker}}
+  \includegraphics[width=0.3\textwidth]{wrongMarker}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \caption{A correct mount of the marker.\label{fig:rightMarker}}
+  \includegraphics[width=0.5\textwidth]{rightMarker}
+\end{figure}
+
+To check if the system is working correctly, we've used a paper and a ruler in a way similar to the previous experiment on short distances, so the robot's motion error won't harm the results. The system was proven to be working correctly, however, the a number of simbols after comma in AICISS's measurement is much larger than we can possibly estimate by hands, so we cannot say anything about the exact precision of the system. \\
+
+There are the following possible pitfalls:
 \begin{itemize}
-\item Experimental results have better precision than accuracy.
-\item The robot is biased to the right.
-\item The robot has higher error in $x$ direction.
-\item Data contain some outliers that spoil Gaussian hypothesis.
-\item Some distributions seem to be not gaussian.
+\item imperfections of the robot construction - since we are limited in details, it is hard to make a perfectly unshakable construction. We could not see it visually, but there could be a minor shaking that could affect the precision of the measurement
+\item imperfection of robot's motors
+\item problems related to a camera switching. To make it smoother we've used a video stitching tool (that can make a one video of three)
+\item our robot is too small to mount multiple markers as it is done with youBot, so it has more problems with camera switching. If we would have tried to put more markers it would have either unbalance the system if it would have been on the top or harmed the motion if it would have been following the robot on some additional wheeled platform
+\item imperfections of the cameras
+\item the experiment took quite a lot of time, so the illumination changed
+\item the camera calibration model perhaps not uses the skew (shear distortion), so if there is the one, it may cause the problems
 \end{itemize}
 
+\section{Program code}
 
+It is sensible to make the measurements using the same parameters those we used in previous experiment. Construction of the robot wasn't changed much, so we'll be able to make a good comparison of the two ways of measurements. That is why we've left almost the same code, but without any light sensor activation and with the motion in loops. To distinguish different experimental tracks in the end of each loop step we've used a time delay of 5 seconds. So, if the position is not changing for this time, it is the end position of on track and start position of the second one. \\ 
+For straight motion the robot moved eight times straight (approximately the length of the room), turned for  $180^{\circ}$ and went back. For arc motion robot moved clockwise and counterclockwise in two circles of different diameter (50 and 240 cm). We've used the following code:
+
+ \begin{lstlisting}
+
+package LegoNXT;
+
+import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.MoveController;
+import lejos.util.Delay;
+import lejos.nxt.Button;
+
+public class goStraight {
+	public static void main(String[] args) {
+		double arcRad = 40;
+		double angle = 90;
+		double arcLen = Math.PI*2*arcRad*angle/360;
+		double trackWidth = 12;
+		DifferentialPilot dp = new DifferentialPilot(MoveController.WHEEL_SIZE_NXT1, trackWidth, Motor.B, Motor.C, true);
+		Button.RIGHT.waitForPressAndRelease();
+		for (int j = 0; j < 5; j++){
+			for (int i = 0; i < 8; i++){
+				dp.setTravelSpeed(10);
+				dp.travel(-arcLen);   
+				Delay.msDelay(5000);
+			}
+			dp.rotate(180);
+		}
+		Button.ESCAPE.waitForPressAndRelease();
+	}
+}
+
+
+
+package LegoNXT;
+
+import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.MoveController;
+import lejos.util.Delay;
+import lejos.nxt.Button;
+
+public class goRight {
+
+	public static void main(String[] args) {
+		double arcRad = 25;
+		double angle = 90;
+		double trackWidth = 12;
+		DifferentialPilot dp = new DifferentialPilot(MoveController.WHEEL_SIZE_NXT1, trackWidth, Motor.B, Motor.C, true);
+		Button.RIGHT.waitForPressAndRelease();
+		for (int i = 0; i < 40; i++){
+			dp.setTravelSpeed(10);
+			dp.arc(arcRad, -angle);
+			dp.stop();
+			Delay.msDelay(5000);
+		}
+		Button.ESCAPE.waitForPressAndRelease();
+	}
+}
+
+
+package LegoNXT;
+
+import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.MoveController;
+import lejos.util.Delay;
+import lejos.nxt.LightSensor;
+import lejos.nxt.Button;
+
+public class goLeft {
+
+	public static void main(String[] args) {
+		double arcRad = 25;
+		double angle = 90;
+		double trackWidth = 12;
+		DifferentialPilot dp = new DifferentialPilot(MoveController.WHEEL_SIZE_NXT1, trackWidth, Motor.B, Motor.C, true);
+		Button.RIGHT.waitForPressAndRelease();
+		for (int i = 0; i < 40; i++){
+			dp.setTravelSpeed(10);
+			dp.arc(-arcRad, angle);
+			dp.stop();
+			Delay.msDelay(5000);
+		}
+		Button.ESCAPE.waitForPressAndRelease();
+	}
+}
+
+
+package LegoNXT;
+
+import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.MoveController;
+import lejos.util.Delay;
+import lejos.nxt.LightSensor;
+import lejos.nxt.Button;
+
+public class goSlightlyRight {
+
+	public static void main(String[] args) {
+		double arcRad = 120;
+		double angle = 30;
+		double trackWidth = 12;
+		DifferentialPilot dp = new DifferentialPilot(MoveController.WHEEL_SIZE_NXT1, trackWidth, Motor.B, Motor.C, true);
+		Button.RIGHT.waitForPressAndRelease();
+		for (int i = 0; i < 40; i++){
+			dp.setTravelSpeed(10);
+			dp.arc(arcRad, -angle);
+			dp.stop();
+			Delay.msDelay(5000);
+		}
+		Button.ESCAPE.waitForPressAndRelease();
+	}
+}
+
+
+package LegoNXT;
+
+import lejos.nxt.Button;
+import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.MoveController;
+import lejos.util.Delay;
+
+public class goSlightlyLeft {
+	public static void main(String[] args) {
+		double arcRad = 120;
+		double angle = 30;
+		double trackWidth = 12;
+		DifferentialPilot dp = new DifferentialPilot(MoveController.WHEEL_SIZE_NXT1, trackWidth, Motor.B, Motor.C, true);
+		Button.RIGHT.waitForPressAndRelease();
+		
+		for (int i = 0; i < 40; i++){
+			dp.setTravelSpeed(10);
+			dp.arc(-arcRad, angle);
+			dp.stop();
+			Delay.msDelay(5000);
+		}
+		Button.ESCAPE.waitForPressAndRelease();
+	}
+}
+
+
+
+\end{lstlisting}
+
+\section{Experimental results}
+
+We've obtained the trajectories depicted in Fig. 
+
+\begin{figure}[h]
+  \centering
+  \caption{Robot's trajectories: straight motion, left deep arc motion, right deep arc motion, left slight arc motion, right slight arc motion.\label{fig:trajectories}}
+  \includegraphics[width=1.0\textwidth]{trajectories}
+\end{figure}
+
+The results are in the attached excel files.
+
+\section{Conclusion}
+
+Small circles show quite a good result, because the whole path can be covered by one camera. In large circles and straight motion we see some breaking points those most likely appeared because of camera switch. We tried to avoid it by using camera stitcher tool, but apparently it could't fix it completely. Usage of multiple markers might help, but in the Lego robot case the markers should be either very small that can make their detection hard or mounted on the large platform that may harm the robot's balance. 
 
 
 \end{document}
