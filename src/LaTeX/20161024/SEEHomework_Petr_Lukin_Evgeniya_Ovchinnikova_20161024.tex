@@ -57,7 +57,7 @@
 
 \section{Experiment setup}
 
-The current experiment was conducted using AICISS optical tracking system - three USB-cameras (lifecam19,20,22) mounted on the ceiling in a room C022. The cameras are pre-calibrated, so we didn't need to perform a calibration by ourselves as we did in the previous assignment. For this system usage we needed to install a marker that would be tracked by the system on the robot. We have generated some new markers (Fig. \ref{fig:markers}) and added them and their linear size (10 $\times$ 10 cm) to the dictionary: 
+The current experiment was conducted using AICISS optical tracking system - three USB-cameras (lifecam19,20,22) mounted on the ceiling in a room C022. The cameras are pre-calibrated, so we didn't need to perform a calibration by ourselves as we did in the previous assignment. For this system usage we needed to install a marker that would be tracked by the system on the robot. We have generated some new markers (Fig. \ref{fig:markers}) and added them and their linear size (10 $\times$ 10 cm) to the dictionary:
 
 \begin{lstlisting}
 
@@ -137,7 +137,7 @@ There are the following possible pitfalls:
 
 \section{Program code}
 
-It is sensible to make the measurements using the same parameters those we used in previous experiment. Construction of the robot wasn't changed much, so we'll be able to make a good comparison of the two ways of measurements. That is why we've left almost the same code, but without any light sensor activation and with the motion in loops. To distinguish different experimental tracks in the end of each loop step we've used a time delay of 5 seconds. So, if the position is not changing for this time, it is the end position of on track and start position of the second one. \\ 
+It is sensible to make the measurements using the same parameters those we used in previous experiment. Construction of the robot wasn't changed much, so we'll be able to make a good comparison of the two ways of measurements. That is why we've left almost the same code, but without any light sensor activation and with the motion in loops. To distinguish different experimental tracks in the end of each loop step we've used a time delay of 5 seconds. So, if the position is not changing for this time, it is the end position of on track and start position of the second one. \\
 For straight motion the robot moved eight times straight (approximately the length of the room), turned for  $180^{\circ}$ and went back. For arc motion robot moved clockwise and counterclockwise in two circles of different diameter (50 and 240 cm). We've used the following code:
 
  \begin{lstlisting}
@@ -163,7 +163,7 @@ public class goStraight {
 		for (int j = 0; j < 5; j++){
 			for (int i = 0; i < 8; i++){
 				dp.setTravelSpeed(10);
-				dp.travel(-arcLen);   
+				dp.travel(-arcLen);
 				Delay.msDelay(5000);
 			}
 			dp.rotate(180);
@@ -292,22 +292,75 @@ public class goSlightlyLeft {
 
 
 \end{lstlisting}
-
+\newpage
 \section{Experimental results}
 
-We've obtained the trajectories depicted in Fig. 
-
-\begin{figure}[h]
-  \centering
-  \caption{Robot's trajectories: straight motion, left deep arc motion, right deep arc motion, left slight arc motion, right slight arc motion.\label{fig:trajectories}}
-  \includegraphics[width=1.0\textwidth]{trajectories}
-\end{figure}
+We've obtained the following trajectories:
+\begin{center}
+  \includegraphics[scale = 0.8]{s.png}
+  
+  \includegraphics[scale = 0.8]{l.png}
+  
+  \includegraphics[scale = 0.8]{r.png}
+  
+  \includegraphics[scale = 0.8]{ll.png}
+  
+  \includegraphics[scale = 0.8]{rr.png}
+\end{center}
 
 The results are in the attached excel files.
 
+\section{Data processing}
+If we want to find model parameters$\alpha_1 ...\alpha_4$ we need to process the data and it includes many steps.
+
+\begin{itemize}
+\item Remove noise when cameras switch.
+\item Find real position of the robot instead of camera recorded position.
+\item Chop recorded data into 40 separate movements and rotate final positions.
+\item Use prediction model for unchopped data.
+\end{itemize}
+The implementation of parameter finding method are not clear right now, so this steps will be done after discussion.
+
+
+\lstinputlisting{chop_data.m}
+
+\section{Pose prediction}
+The next pose of the robot can be predicted using previous pose, control command and time delay.
+
+The code of pose prediction function:
+
+\lstinputlisting{predict_pose.m}
+
+\section{Pose prediction with linear relation}
+
+In this case we assume that given commands are executed with some constant linear changes: $v_{effective} =k_v v+b_b $ , $\omega_{effective} =k_{\omega} v+b_{\omega} $. In order to find this linear coefficients, we can apply optimization procedure and use error function: 
+
+\begin{equation}
+E = \sum\limits_i^N ||pose(i)_{predicted} - pose(i)_{true}||,
+\end{equation}
+where $N$ is number of sample positions.
+
+Fitness function for finding linear coefficients for slight left movement:
+
+\lstinputlisting{step2error.m}
+
+
+This optimization can be done with command:
+\begin{lstlisting}
+  fminsearch(@step2error,[1,1,0,0])
+\end{lstlisting}
+That gave result: $[0.8568,    1.0490,    0.0003,   -0.0000]$. But after optimization the error is still high and it can be seen from the next figure that compares predicted path with real one:
+
+\includegraphics[scale = 1]{step2error.png}
+
+It seems to be that linear relation is not enough for the motion model. We can increase number of training samples or change optimization method to reduce error within this model.
+
 \section{Conclusion}
 
-Small circles show quite a good result, because the whole path can be covered by one camera. In large circles and straight motion we see some breaking points those most likely appeared because of camera switch. We tried to avoid it by using camera stitcher tool, but apparently it could't fix it completely. Usage of multiple markers might help, but in the Lego robot case the markers should be either very small that can make their detection hard or mounted on the large platform that may harm the robot's balance. 
+Small circles show quite a good result, because the whole path can be covered by one camera. In large circles and straight motion we see some breaking points those most likely appeared because of camera switch. We tried to avoid it by using camera stitcher tool, but apparently it could't fix it completely. Usage of multiple markers might help, but in the Lego robot case the markers should be either very small that can make their detection hard or mounted on the large platform that may harm the robot's balance.
 
+\bigskip
+
+Model parameter identification is multiple steps process and many steps have to be clarified. Now we can observe that linear motion prediction model works bad even after optimization. So, this model has to be changed to stochastic model.
 
 \end{document}
