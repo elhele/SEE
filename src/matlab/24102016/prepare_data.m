@@ -8,9 +8,9 @@ sleft = sleft(1:end-250,:);
 sright = sright(1:end-1,:);
 left = left(1:end-1,:);
 right = right(1:end-1,:);
-% c1  = left(681:3221,:);
-% omega = 2*pi/(c1(end,1)-c1(1,1))*1000;
-% v = 2*pi*250/(c1(end,1)-c1(1,1))*1000;test_set = c1([1:250:2500],:);
+ c1  = left(681:3221,:);
+ omega = 2*pi/(c1(end,1)-c1(1,1))*1000;
+ v = 2*pi*250/(c1(end,1)-c1(1,1))*1000;test_set = c1([1:250:2500],:);
 
 figure(1)
 plot(straight(:,2),straight(:,3));
