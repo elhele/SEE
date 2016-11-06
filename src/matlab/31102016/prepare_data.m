@@ -51,37 +51,37 @@ omega = [2*pi/(l(915,1)-l(1,1)) 2*pi/(r(625,1)-r(1,1)) ...
 % dlmwrite('straight.csv',snew,'precision','%.3f')
 
 
-% figure(1)
-% plot(straight(:,2),straight(:,3));
-% grid on
-% xlabel('x,mm')
-% ylabel('y,mm')
-% title('Straight movement')
-% 
-% figure(2)
-% plot(sleft(:,2),sleft(:,3));
-% grid on
-% xlabel('x,mm')
-% ylabel('y,mm')
-% title('Slight left movement')
-% 
-% figure(3)
-% plot(sright(:,2),sright(:,3));
-% grid on
-% xlabel('x,mm')
-% ylabel('y,mm')
-% title('Slight right movement')
-% 
-% figure(4)
-% plot(left(:,2),left(:,3));
-% grid on
-% xlabel('x,mm')
-% ylabel('y,mm')
-% title('Left movement')
-% 
-% figure(5)
-% plot(right(:,2),right(:,3));
-% grid on
-% xlabel('x,mm')
-% ylabel('y,mm')
-% title('Right movement')
+figure(1)
+plot(s(:,2),s(:,3));
+grid on
+xlabel('x,mm')
+ylabel('y,mm')
+title('Straight movement')
+
+figure(2)
+plot(l(:,2),l(:,3));
+grid on
+xlabel('x,mm')
+ylabel('y,mm')
+title('Slight left movement')
+
+figure(3)
+plot(r(:,2),r(:,3));
+grid on
+xlabel('x,mm')
+ylabel('y,mm')
+title('Slight right movement')
+
+figure(4)
+plot(ll(:,2),ll(:,3));
+grid on
+xlabel('x,mm')
+ylabel('y,mm')
+title('Left movement')
+
+figure(5)
+plot(rr(:,2),rr(:,3));
+grid on
+xlabel('x,mm')
+ylabel('y,mm')
+title('Right movement')
