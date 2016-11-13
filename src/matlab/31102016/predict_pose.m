@@ -6,7 +6,7 @@ xp = posep(1);
 yp = posep(2);
 thetap = posep(3);
 
-if omegat<0.001
+if abs(omegat)<0.001
     x = xp-vt*sin(thetap)+vt*sin(thetap+omegat*dt);
     y = yp+vt*cos(thetap)-vt*cos(thetap+omegat*dt);
 else

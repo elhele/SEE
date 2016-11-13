@@ -608,11 +608,11 @@ Optimization procedure is really sensitive to change of many parameters:
 \item  Initial $\alpha$ more that $10^{-1}$ will give coefficients that spoil motion prediction completely.
 \item Commanded speed and angular speed can not be easily measured and this parameters spoil performance.
 \end{enumerate}
- 
+
  \medskip
  Good estimations of parameter $alpha$ are :$[ 0.0143,~    0.0478,~    0.0000 ,~   0.0662,~    0.0000 ,~   0.0804].$
  \medskip
- 
+
  Example of bad parameters:  $[0.0143,~    2.2240,~    0.0000 ,~   0.1230 ,~   0.0000 ,~   1.4137]$
 
 
@@ -641,7 +641,7 @@ Bad set of parameters gave such results:
 As we can see, wrong alphas can spoil all motion prediction mechanism.
 
 
-Multiple runs of one motion prediction sequence usually give bad precision because of wrong $v,\omega$ in simulation. 
+Multiple runs of one motion prediction sequence usually give bad precision because of wrong $v,\omega$ in simulation.
 
 \includegraphics[scale = 1]{scatter.png}
 
@@ -652,5 +652,9 @@ Small circles show quite a good result, because the whole path can be covered by
 \bigskip
 
 Model parameter identification is multiple steps process and many steps have to be clarified. Now we can observe that linear motion prediction model works bad even after optimization. So, this model has to be changed to stochastic model.
+
+\bigskip
+
+But the main problem of finding good motion model is estimation of robot $v,\omega$. The ones we used from the commanded control give really biased results. So, there should be a better way to estimate this parameters.
 
 \end{document}

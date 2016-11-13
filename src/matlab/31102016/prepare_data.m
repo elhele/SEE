@@ -39,8 +39,8 @@ snew = s(1:10:240,:);
 v = [2*pi*1200/(l(915,1)-l(1,1)) 2*pi*1200/(r(625,1)-r(1,1)) ...
     2*pi*160/(rr(291,1)-rr(1,1)) 2*pi*250/(ll(455,1)-ll(1,1)),...
     0.094]*1000;
-omega = [2*pi/(l(915,1)-l(1,1)) 2*pi/(r(625,1)-r(1,1)) ...
-    2*pi*0.65/(rr(291,1)-rr(1,1)) 2*pi*0.99/(ll(430,1)-ll(1,1)),0]*1000;
+omega = [2*pi/(l(915,1)-l(1,1)) -2*pi/(r(625,1)-r(1,1)) ...
+    -2*pi*0.65/(rr(291,1)-rr(1,1)) 2*pi*0.99/(ll(430,1)-ll(1,1)),0]*1000;
 % omega = [0.08,0.08,0.17,0.17,0];
 % v = [100,100,50,50,100];
 
@@ -51,37 +51,37 @@ omega = [2*pi/(l(915,1)-l(1,1)) 2*pi/(r(625,1)-r(1,1)) ...
 % dlmwrite('straight.csv',snew,'precision','%.3f')
 
 
-figure(1)
-plot(s(:,2),s(:,3));
-grid on
-xlabel('x,mm')
-ylabel('y,mm')
-title('Straight movement')
-
-figure(2)
-plot(l(:,2),l(:,3));
-grid on
-xlabel('x,mm')
-ylabel('y,mm')
-title('Slight left movement')
-
-figure(3)
-plot(r(:,2),r(:,3));
-grid on
-xlabel('x,mm')
-ylabel('y,mm')
-title('Slight right movement')
-
-figure(4)
-plot(ll(:,2),ll(:,3));
-grid on
-xlabel('x,mm')
-ylabel('y,mm')
-title('Left movement')
-
-figure(5)
-plot(rr(:,2),rr(:,3));
-grid on
-xlabel('x,mm')
-ylabel('y,mm')
-title('Right movement')
+% figure(1)
+% plot(s(:,2),s(:,3));
+% grid on
+% xlabel('x,mm')
+% ylabel('y,mm')
+% title('Straight movement')
+% 
+% figure(2)
+% plot(l(:,2),l(:,3));
+% grid on
+% xlabel('x,mm')
+% ylabel('y,mm')
+% title('Slight left movement')
+% 
+% figure(3)
+% plot(r(:,2),r(:,3));
+% grid on
+% xlabel('x,mm')
+% ylabel('y,mm')
+% title('Slight right movement')
+% 
+% figure(4)
+% plot(ll(:,2),ll(:,3));
+% grid on
+% xlabel('x,mm')
+% ylabel('y,mm')
+% title('Left movement')
+% 
+% figure(5)
+% plot(rr(:,2),rr(:,3));
+% grid on
+% xlabel('x,mm')
+% ylabel('y,mm')
+% title('Right movement')
