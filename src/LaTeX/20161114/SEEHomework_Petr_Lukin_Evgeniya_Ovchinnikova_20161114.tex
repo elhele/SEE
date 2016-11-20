@@ -1,0 +1,193 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{titling}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\setlength{\heavyrulewidth}{1.5pt}
+\setlength{\abovetopsep}{4pt}
+\setlength{\parindent}{0pt}
+\graphicspath{{.}}
+
+\usepackage[margin=1in]{geometry}
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+% Must be after geometry
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{SEE Assignment 7}
+\lhead{P.Lukin, E. Ovchinnikova}
+\cfoot{\thepage}
+
+\setlength{\droptitle}{-5em}
+
+\title{Scientific Experimentation and Evaluation  \\
+				Assignment: 8}
+\author{Petr Lukin, Evgeniya Ovchinnikova}
+\date{Lecture date: $14^{th}$ November 2016}
+
+\begin{document}
+%-------------------------------------------------------------------------------
+\lstset{language=Matlab,%
+    %basicstyle=\color{red},
+    breaklines=true,%
+    morekeywords={matlab2tikz},
+    keywordstyle=\color{blue},%
+    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+    identifierstyle=\color{black},%
+    stringstyle=\color{mylilas},
+    commentstyle=\color{mygreen},%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle={\tiny \color{black}},% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    emph=[1]{break},emphstyle=[1]\color{red}, %some words to emphasise
+    %emph=[2]{word1,word2}, emphstyle=[2]{style},
+}
+
+%-------------------------------------------------------------------------------
+
+
+\maketitle
+
+\section{Encoder data extraction}
+
+As the performance of LegoNXT robot is not always sufficient to create a good motion model, it is important to detect an error source. On of the possible problems is hardware - an uneven motor motion. To find out the scale of this problem, we need to receive an encoder information from the motors. It should be done using parallel threads - one thread for driving and another - for writing encoder information. The differential pilot class methods can be called as immediate return methods, so it is quite easy to implement multithreading. For this we used the following code:
+
+\begin{lstlisting}
+package LegoNXT;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import lejos.nxt.Button;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.MoveController;
+import lejos.util.Delay;
+import lejos.nxt.Motor;
+
+
+public class StraightEncoder {
+        public static void main(String args[]) {
+                System.out.println("Please press right button!");
+                Button.RIGHT.waitForPressAndRelease();
+
+                FileOutputStream out = null;
+                File data = new File("tacho1.dat");
+
+                try {
+                        out = new FileOutputStream(data);
+                } catch (IOException e) {
+                        System.err.println("Failed to create output stream");
+                        System.exit(1);
+                }
+                double arcRad = 40;
+                double angle = 90;
+                double arcLen = Math.PI * 2 * arcRad * angle / 360;
+                int getEncoderB;
+                int getEncoderC;
+                double trackWidth = 12;
+                int encoderDelay = 500;
+
+                DataOutputStream dataOut = new DataOutputStream(out);
+
+                DifferentialPilot dp = new DifferentialPilot(MoveController.WHEEL_SIZE_NXT1, trackWidth, Motor.B, Motor.C, true);
+                for (int j = 0; j < 2; j++) {
+                        for (int i = 0; i < 2; i++) {
+                                dp.setTravelSpeed(10);
+                                dp.travel(-arcLen, true);
+                                while(dp.isMoving()){
+                                        getEncoderB = Motor.B.getTachoCount();
+                                        getEncoderC = Motor.C.getTachoCount();
+
+                                        try {
+                                                dataOut.writeInt(getEncoderB);
+                                                dataOut.writeInt(getEncoderC);
+                                                Delay.msDelay(encoderDelay);
+                                        } catch (IOException e) {
+                                                e.printStackTrace();
+                                        }
+                                }
+                                Delay.msDelay(3000);
+                        }
+                        dp.rotate(180, true);
+                        while(dp.isMoving()){
+                                getEncoderB = Motor.B.getTachoCount();
+                                getEncoderC = Motor.C.getTachoCount();
+
+                                try {
+                                        dataOut.writeInt(getEncoderB);
+                                        dataOut.writeInt(getEncoderC);
+                                } catch (IOException e) {
+                                        e.printStackTrace();
+                                }
+                        }
+                }
+
+                try {
+                        dataOut.close();
+                } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                }
+        }
+}
+\end{lstlisting}
+
+This code uses the same functions for movement those we used for straight movement in our previous experiments.\\
+
+As we discussed, we store the values in a file in the robot's system that can be easily extracted using NXJ lejos file browser.\\
+
+The program works well, however, we've faced certain problems with this method. The internal memory of the robot is only 256KB and the file size, in case we are constantly writing the encoder's data to the file, exceeds this amount quite fast. LegoNXT cannot handle this problem well and if the file reaches too large size, it breaks the system in such a way that it cannot be restored by reseting the robot with battery removal and the only way to fix this problem is to reflash it. That is why we've added an "encoderDelay" parameter so we would store the encoder data only once in 500 ms. However, the file size is still growing quite fast and in the future it would be better to store the sensor data on computer using Bluetooth connection (that is also not perfect, but it won't break the robot) or use EV3 that has an SD card where we could store the data.\\
+
+This method allows to store data in the hex format (see attached tacho1.dat), so we needed to convert in to integers using the following python script:
+
+\begin{lstlisting}
+import binascii
+import numpy as np
+filename = 'tacho1.dat'
+with open(filename, 'rb') as f:
+    content = f.read()
+angles = []
+anglesB = []
+anglesC = []
+#7 - because of some senseless data in the beginning
+#print (binascii.hexlify(content)).split("0000")[7:]
+for elem in (binascii.hexlify(content)).split("0000")[7:]:
+    elemToInt = int(elem, 16)
+    angles.append(elemToInt)
+#print angles
+i = 0
+while (i < len(angles)):
+    anglesB.append(angles[i])
+    anglesC.append(angles[i+1])
+    i+=2
+#print anglesB
+#print "*******"
+#print anglesC
+diff = []
+for i in range(len(anglesB)):
+    if (abs(anglesB[i] - anglesC[i]) < 2000):
+        diff.append(anglesB[i] - anglesC[i])
+print diff
+
+np.savetxt('outputB.out', anglesB, delimiter=',')
+np.savetxt('outputC.out', anglesC, delimiter=',')
+np.savetxt('outputDiff.out', diff, delimiter=',')
+\end{lstlisting}
+
+The output files for motors B and C and the difference between them is attach as files outputB.out, outputC.out and outputDiff.out. The difference with 500 ms step looks in the following way (in degrees):\\
+
+"[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 9, 10, 11, 11, 11, 11, 15, 15, 16, 17, 17, 17, 21, 21, 21, 25, 27, 27, 27, 28, 29, 29, 31, 31, 32, 32, 33, 33, 35, 36, 36, 36, 37, 38, 40, 40, 40,  ...  1548, 1548, 1548, 1548, 1548, 1546]"\\
+
+So we can see how fast the motors' velocities diverge.
+
+
+\end{document}
